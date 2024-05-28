@@ -6,6 +6,11 @@ const AtividadeSchema = new mongoose.Schema({
     ref: "Participante",
     required: true,
   },
+  grupoTrabalho: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "GrupoTrabalho",
+    required: true,
+  },
   projeto: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Projeto",

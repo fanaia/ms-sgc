@@ -15,13 +15,13 @@ class IndexController {
     if (!participante) return res.status(401).send({ message: "Invalid credentials" });
     if (!participante.ativo) return res.status(401).send({ message: "Account is not active" });
 
-    const token = jwt.sign(
-      { _id: participante._id, whatsapp: participante.whatsapp, senha: participante.senha },
+    const tokenJwt = jwt.sign(
+      { _id: participante._id, whatsapp: participante.whatsapp, senha: participante.senha, tokenHora: participante.tokenHora},
       process.env.ACCESS_TOKEN_SECRET
     );
-    participante.jwt = token;
+    participante.jwt = tokenJwt;
     await participante.save();
-    res.send({ token });
+    res.send({ tokenJwt });
   }
 }
 

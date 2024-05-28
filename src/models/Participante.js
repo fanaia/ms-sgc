@@ -25,6 +25,10 @@ const ParticipanteSchema = new mongoose.Schema({
     type: Boolean,
     required: false,
   },
+  tokenHora: {
+    type: Number,
+    required: false,
+  },
   dataInclusao: {
     type: Date,
     default: Date.now,
@@ -34,6 +38,7 @@ const ParticipanteSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
 const Participante = mongoose.model("Participante", ParticipanteSchema, "participantes");
 
 module.exports = Participante;
