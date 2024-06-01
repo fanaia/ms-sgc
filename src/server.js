@@ -14,6 +14,7 @@ const atividadesRouter = require("./routers/atividadesRouter");
 const projetosRouter = require("./routers/projetosRouter");
 const participantesRouter = require("./routers/participantesRouter");
 const gruposTrabalhoRouter = require("./routers/gruposTrabalhoRouter");
+const movimentacoesFinanceirasRouter = require("./routers/movimentacoesFinanceirasRouter");
 
 let server = null;
 
@@ -33,6 +34,7 @@ const start = async () => {
   app.use("/api/grupos-trabalho", authMiddleware, gruposTrabalhoRouter);
   app.use("/api/participantes", authMiddleware, participantesRouter);
   // app.use("/api/participantes", participantesRouter);
+  app.use("/api/movimentacoes-financeiras", authMiddleware, movimentacoesFinanceirasRouter);
 
   app.use((error, req, res, next) => {
     logger.error(`${error.stack}`);

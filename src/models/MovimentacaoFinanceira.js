@@ -6,6 +6,16 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     ref: "Participante",
     required: true,
   },
+  grupoTrabalho: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "GrupoTrabalho",
+    required: true,
+  },
+  projeto: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Projeto",
+    required: true,
+  },
   descricao: {
     type: String,
     required: true,
@@ -19,9 +29,13 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     enum: [1, -1],
     required: true,
   },
-  chavePixFatura: {
+  destino : {
     type: String,
-    required: false,
+    required: true,
+  },
+  origem : {
+    type: String,
+    required: true,
   },
   chavePixTransacao: {
     type: String,
@@ -32,6 +46,10 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     enum: ["pendente", "ativo", "recusado", "cancelado"],
     default: "pendente",
     required: true,
+  },
+  dataTransação: {
+    type: Date,
+    default: Date.now,
   },
   dataInclusao: {
     type: Date,
