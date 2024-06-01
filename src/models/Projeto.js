@@ -13,10 +13,6 @@ const ProjetoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  tokensHora: {
-    type: Number,
-    required: false,
-  },
   ativo: {
     type: Boolean,
     required: false,
