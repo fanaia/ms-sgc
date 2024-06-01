@@ -19,13 +19,23 @@ const ProjetoSchema = new mongoose.Schema({
     default: "pendente",
     required: true,
   },
+  participanteInclusao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
+  },
   dataInclusao: {
     type: Date,
     default: Date.now,
   },
-  dataAlteracao: {
-    type: Date,
-    default: Date.now,
+  participanteUltimaAlteracao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: false,
+  },
+  dataUltimaAlteracao: {
+    type: Date,    
+    required: false,
   },
 });
 

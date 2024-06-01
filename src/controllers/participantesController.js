@@ -14,6 +14,9 @@ class participantesController {
       updateData.senha = hashedPassword;
     }
 
+    updateData.participanteInclusao = req.user.id;
+    updateData.dataInclusao = new Date();
+
     const participante = new Participante(updateData);
     await participante.save();
     res.status(201).send(participante);
@@ -44,20 +47,30 @@ class participantesController {
       delete updateData.senha;
     }
 
+    updateData.participanteUltimaAlteracao = req.user.id;
+    updateData.dataUltimaAlteracao = new Date();
+
     const participante = await Participante.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
     });
     if (!participante) {
       return res.status(404).send("Participante not found");
     }
+
     res.send(participante);
   }
 
   static async delete(req, res) {
-    const participante = await Participante.findByIdAndDelete(req.params.id);
+    const participante = await Participante.findById(req.params.id);
     if (!participante) {
       return res.status(404).send("Participante not found");
     }
+
+    participante.status = "cancelado";
+    participante.participanteUltimaAlteracao = req.user.id;
+    participante.dataUltimaAlteracao = new Date();
+
+    await participante.save();
     res.status(204).send();
   }
 }

@@ -24,13 +24,23 @@ const GrupoTrabalhoSchema = new mongoose.Schema({
     ref: "Participante",
     required: true,
   },
+  participanteInclusao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
+  },
   dataInclusao: {
     type: Date,
     default: Date.now,
   },
-  dataAlteracao: {
+  participanteUltimaAlteracao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: false,
+  },
+  dataUltimaAlteracao: {
     type: Date,
-    default: Date.now,
+    required: false,
   },
 });
 

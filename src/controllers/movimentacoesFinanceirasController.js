@@ -1,10 +1,14 @@
- const MovimentacaoFinanceira = require("../models/MovimentacaoFinanceira");
+const MovimentacaoFinanceira = require("../models/MovimentacaoFinanceira");
 
 class movimentacoesFinanceirasController {
   static async create(req, res) {
     let updateData = req.body;
-    if (!updateData.valor || updateData.valor == "") return res.status(400).send("Valor is required");
-    
+    if (!updateData.valor || updateData.valor == "")
+      return res.status(400).send("Valor is required");
+
+    updateData.participanteInclusao = req.user.id;
+    updateData.dataInclusao = new Date();
+
     const movimentacao = new MovimentacaoFinanceira(updateData);
     await movimentacao.save();
     res.status(201).send(movimentacao);
@@ -28,6 +32,9 @@ class movimentacoesFinanceirasController {
 
     if (updateData.valor == "") return res.status(400).send("Valor is required");
 
+    updateData.participanteUltimaAlteracao = req.user.id;
+    updateData.dataUltimaAlteracao = new Date();
+
     const movimentacao = await MovimentacaoFinanceira.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
     });
@@ -38,10 +45,16 @@ class movimentacoesFinanceirasController {
   }
 
   static async delete(req, res) {
-    const movimentacao = await MovimentacaoFinanceira.findByIdAndDelete(req.params.id);
+    const movimentacao = await MovimentacaoFinanceira.findById(req.params.id);
     if (!movimentacao) {
       return res.status(404).send("Movimentacao not found");
     }
+    
+    grupoTrabalho.status = "cancelado";
+    grupoTrabalho.participanteUltimaAlteracao = req.user.id;
+    grupoTrabalho.dataUltimaAlteracao = new Date();
+
+    await grupoTrabalho.save();
     res.status(204).send();
   }
 }
