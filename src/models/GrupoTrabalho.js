@@ -9,6 +9,10 @@ const GrupoTrabalhoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  corEtiqueta: {
+    type: String,
+    required: false,
+  },
   ativo: {
     type: Boolean,
     required: false,
