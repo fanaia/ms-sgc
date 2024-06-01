@@ -27,9 +27,11 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  ativo: {
-    type: Boolean,
-    required: false,
+  status: {
+    type: String,
+    enum: ["pendente", "ativo", "recusado", "cancelado"],
+    default: "pendente",
+    required: true,
   },
   dataInclusao: {
     type: Date,

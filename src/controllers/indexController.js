@@ -12,11 +12,17 @@ class IndexController {
     const hashedPassword = CryptoJS.SHA256(senha).toString();
     const participante = await Participante.findOne({ whatsapp, senha: hashedPassword });
 
-    if (!participante) return res.status(401).send({ message: "Invalid credentials" });
-    if (!participante.ativo) return res.status(401).send({ message: "Account is not active" });
+    if (!participante) return res.status(401).send({ message: "Dados inválidos" });
+    if (!participante.status === "ativo")
+      return res.status(401).send({ message: "Status participante: " + participante.status });
 
     const tokenJwt = jwt.sign(
-      { _id: participante._id, whatsapp: participante.whatsapp, senha: participante.senha, tokenHora: participante.tokenHora},
+      {
+        _id: participante._id,
+        whatsapp: participante.whatsapp,
+        senha: participante.senha,
+        tokenHora: participante.tokenHora,
+      },
       process.env.ACCESS_TOKEN_SECRET
     );
     participante.jwt = tokenJwt;

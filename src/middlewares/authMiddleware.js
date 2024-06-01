@@ -17,7 +17,8 @@ const authMiddleware = async (req, res, next) => {
     if (!participante) return res.status(403).json({ error: "Participante não encontrado" });
     if (participante.whatsapp !== whatsapp || participante.senha !== senha)
       return res.status(403).json({ error: "Autenticação inválida" });
-    if (!participante.ativo) return res.status(403).json({ error: "Participante desativado" });
+    if (participante.status !== "ativo")
+      return res.status(403).json({ error: "Status Participante: " + participante.status });
 
     req.user = participante;
     next();

@@ -33,9 +33,11 @@ const AtividadeSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  ativo: {
-    type: Boolean,
-    required: false,
+  status: {
+    type: String,
+    enum: ["pendente", "ativo", "recusado", "cancelado"],
+    default: "pendente",
+    required: true,
   },
   dataInclusao: {
     type: Date,
