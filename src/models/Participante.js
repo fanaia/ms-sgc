@@ -38,6 +38,7 @@ const ParticipanteSchema = new mongoose.Schema({
   },
   dataInclusao: {
     type: Date,
+    required: true,
     default: Date.now,
   },
   participanteUltimaAlteracao: {

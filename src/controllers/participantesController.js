@@ -23,7 +23,8 @@ class participantesController {
   }
 
   static async readAll(req, res) {
-    const participantes = await Participante.find(req.query);
+    const query = { ...req.query, status: { $in: ["ativo", "pendente"] } };
+    const participantes = await Participante.find(query);
     res.send(participantes);
   }
 
