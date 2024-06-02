@@ -51,17 +51,11 @@ class atividadesController {
       return res.status(404).send("Atividade not found");
     }
 
-    // Set status to 'cancelado'
     atividade.status = "cancelado";
-
-    // Set participanteUltimaAlteracao to the participant ID from the request token
     atividade.participanteUltimaAlteracao = req.user.id;
-
-    // Set dataUltimaAlteracao to the current date
     atividade.dataUltimaAlteracao = new Date();
 
     await atividade.save();
-
     res.status(204).send();
   }
 }
