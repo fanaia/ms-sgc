@@ -25,11 +25,6 @@ const ParticipanteSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  participanteResponsavel: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Participante",
-    required: true,
-  },
   status: {
     type: String,
     enum: ["pendente", "ativo", "recusado", "cancelado"],

@@ -14,7 +14,10 @@ class grupoTrabalhosController {
   }
 
   static async readAll(req, res) {
-    const gruposTrabalho = await GrupoTrabalho.find(req.query);
+    const gruposTrabalho = await GrupoTrabalho.find(req.query).populate(
+      "participanteResponsavel",
+      "nome"
+    );
     res.send(gruposTrabalho);
   }
 

@@ -13,6 +13,11 @@ const ProjetoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  participanteResponsavel: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
+  },
   status: {
     type: String,
     enum: ["pendente", "ativo", "recusado", "cancelado"],
@@ -34,7 +39,7 @@ const ProjetoSchema = new mongoose.Schema({
     required: false,
   },
   dataUltimaAlteracao: {
-    type: Date,    
+    type: Date,
     required: false,
   },
 });
