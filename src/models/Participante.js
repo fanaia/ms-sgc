@@ -21,9 +21,10 @@ const ParticipanteSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  tokenHora: {
-    type: Number,
-    required: false,
+  participanteResponsavel: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
   },
   status: {
     type: String,

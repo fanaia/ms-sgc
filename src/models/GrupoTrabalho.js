@@ -13,15 +13,15 @@ const GrupoTrabalhoSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  participanteResponsavel: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
+  },
   status: {
     type: String,
     enum: ["pendente", "ativo", "recusado", "cancelado"],
     default: "pendente",
-    required: true,
-  },
-  participanteResponsavel: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Participante",
     required: true,
   },
   participanteInclusao: {
