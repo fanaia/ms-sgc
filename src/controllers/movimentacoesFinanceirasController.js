@@ -17,8 +17,8 @@ class movimentacoesFinanceirasController {
   static async readAll(req, res) {
     const movimentacoes = await MovimentacaoFinanceira.find(req.query)
       .populate("participante", "nome")
-      .populate("grupoTrabalho", "nome")
-      .populate("projeto", "nome");
+      .populate("grupoTrabalho", "nome corEtiqueta")
+      .populate("projeto", "nome corEtiqueta");
     res.send(movimentacoes);
   }
 
