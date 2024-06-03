@@ -19,8 +19,8 @@ class atividadesController {
   static async readAll(req, res) {
     const atividades = await Atividade.find(req.query)
       .populate("participante", "nome")
-      .populate("grupoTrabalho", "nome")
-      .populate("projeto", "nome");
+      .populate("grupoTrabalho", "nome corEtiqueta")
+      .populate("projeto", "nome corEtiqueta");
     res.send(atividades);
   }
 
