@@ -15,7 +15,10 @@ class movimentacoesFinanceirasController {
   }
 
   static async readAll(req, res) {
-    const movimentacoes = await MovimentacaoFinanceira.find(req.query);
+    const movimentacoes = await MovimentacaoFinanceira.find(req.query)
+      .populate("participante", "nome")
+      .populate("grupoTrabalho", "nome")
+      .populate("projeto", "nome");
     res.send(movimentacoes);
   }
 
@@ -30,14 +33,19 @@ class movimentacoesFinanceirasController {
   static async update(req, res) {
     const updateData = req.body;
 
-    if (updateData.valor == "") return res.status(400).send("Valor is required");
+    if (updateData.valor == "")
+      return res.status(400).send("Valor is required");
 
     updateData.participanteUltimaAlteracao = req.user.id;
     updateData.dataUltimaAlteracao = new Date();
 
-    const movimentacao = await MovimentacaoFinanceira.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
+    const movimentacao = await MovimentacaoFinanceira.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+      }
+    );
     if (!movimentacao) {
       return res.status(404).send("Movimentacao not found");
     }
@@ -49,7 +57,7 @@ class movimentacoesFinanceirasController {
     if (!movimentacao) {
       return res.status(404).send("Movimentacao not found");
     }
-    
+
     grupoTrabalho.status = "cancelado";
     grupoTrabalho.participanteUltimaAlteracao = req.user.id;
     grupoTrabalho.dataUltimaAlteracao = new Date();
