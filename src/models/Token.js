@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 
 const TokenSchema = new mongoose.Schema({
-  tipo: {
+  origem: {
     type: String,
-    enum: ["atividade", "movimentacaoFinanceira", "participante"],
+    enum: ["atividade", "movimentacaoFinanceira"],
     required: true,
   },
   acao: {
     type: String,
-    enum: ["adicionar", "comprar", "liquidar", "transferir"],
+    enum: ["conquistar", "comprar", "liquidar", "transferir"],
     required: true,
   },
   item: {
@@ -33,18 +33,33 @@ const TokenSchema = new mongoose.Schema({
     enum: [1, -1],
     required: true,
   },
-  ativo: {
-    type: Boolean,
-    required: false,
+  status: {
+    type: String,
+    enum: ["pendente", "ativo", "recusado", "cancelado"],
+    default: "pendente",
+    required: true,
+  },
+  participanteInclusao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: true,
   },
   dataInclusao: {
     type: Date,
     default: Date.now,
   },
-  dataAlteracao: {
-    type: Date,
-    default: Date.now,
+  participanteUltimaAlteracao: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Participante",
+    required: false,
   },
+  dataUltimaAlteracao: {
+    type: Date,
+    required: false,
+  },
+  compra: CompraSchema,
+  liquidacao: LiquidaSchema,
+  transferencia: TransferenciaSchema,
 });
 
 const Token = mongoose.model("Token", TokenSchema, "tokens");

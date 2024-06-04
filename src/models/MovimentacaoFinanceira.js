@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const MovimentacaoFinanceiraSchema = new mongoose.Schema({
+  origem: {
+    type: String,
+    enum: ["atividade", "movimentacaoFinanceira"],
+    required: true,
+  },
   participante: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Participante",
@@ -29,11 +34,11 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     enum: [1, -1],
     required: true,
   },
-  destino : {
+  destino: {
     type: String,
     required: true,
   },
-  origem : {
+  origem: {
     type: String,
     required: true,
   },
@@ -41,7 +46,7 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  dataTransação: {
+  dataTransacao: {
     type: Date,
     default: Date.now,
   },
@@ -66,7 +71,7 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
     required: false,
   },
   dataUltimaAlteracao: {
-    type: Date,    
+    type: Date,
     required: false,
   },
 });
