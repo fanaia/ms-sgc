@@ -36,11 +36,11 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
   },
   destino: {
     type: String,
-    required: true,
+    required: false,
   },
   origem: {
     type: String,
-    required: true,
+    required: false,
   },
   chavePixTransacao: {
     type: String,
@@ -48,7 +48,7 @@ const MovimentacaoFinanceiraSchema = new mongoose.Schema({
   },
   dataTransacao: {
     type: Date,
-    default: Date.now,
+    required: true,
   },
   status: {
     type: String,
