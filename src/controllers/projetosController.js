@@ -1,24 +1,27 @@
 const Projeto = require("../models/Projeto");
 
 class projetosController {
-static async create(req, res) {
+  static async create(req, res) {
     try {
-        const updateData = req.body;
-        if (!updateData.nome || updateData.nome == "") return res.status(400).send("Nome is required");
+      const updateData = req.body;
+      if (!updateData.nome || updateData.nome == "")
+        return res.status(400).send("Nome is required");
 
-        updateData.participanteInclusao = req.user.id;
-        updateData.dataInclusao = new Date();
+      updateData.participanteInclusao = req.user.id;
+      updateData.dataInclusao = new Date();
 
-        const projeto = new Projeto(updateData);
-        await projeto.save();
-        res.status(201).send(projeto);
+      const projeto = new Projeto(updateData);
+      await projeto.save();
+      res.status(201).send(projeto);
     } catch (err) {
-        res.status(400).send(err.message);
+      res.status(400).send(err.message);
     }
-}
+  }
 
   static async readAll(req, res) {
-    const projetos = await Projeto.find(req.query).populate("participanteResponsavel", "nome");
+    const projetos = await Projeto.find(req.query)
+      .populate("participanteResponsavel", "nome")
+      .sort("nome");
     res.send(projetos);
   }
 

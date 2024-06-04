@@ -4,6 +4,9 @@ const movimentacoesFinanceirasController = require("../controllers/movimentacoes
 const router = express.Router();
 router.post("/", movimentacoesFinanceirasController.create);
 router.get("/", movimentacoesFinanceirasController.readAll);
+
+router.get("/getSaldoTotal", movimentacoesFinanceirasController.getSaldoTotal);
+
 router.get("/:id", movimentacoesFinanceirasController.readOne);
 router.patch("/:id", movimentacoesFinanceirasController.update);
 router.delete("/:id", movimentacoesFinanceirasController.delete);
