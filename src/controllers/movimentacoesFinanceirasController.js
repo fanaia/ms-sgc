@@ -92,8 +92,6 @@ class movimentacoesFinanceirasController {
     if (!saldo[0]) {
       return res.status(404).send("Nenhuma movimentação financeira encontrada");
     }
-    console.log({ saldo: saldo[0].saldo });
-
     res.send({ saldo: saldo[0].saldo });
   }
 }

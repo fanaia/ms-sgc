@@ -1,4 +1,5 @@
 const Atividade = require("../models/Atividade");
+const MovimentacaoToken = require("../models/MovimentacaoToken");
 
 class atividadesController {
   static async save(req, res) {
@@ -25,10 +26,30 @@ class atividadesController {
         await atividade.save();
       }
 
-      
+      const movimentacaoToken = await MovimentacaoToken.findOneAndUpdate(
+        {
+          origem: "atividade",
+          item: atividade._id,
+          acao: "conquistar",
+        },
+        {
+          participante: updateData.participante._id,
+          valor: updateData.totalTokens,
+          tipoMovimentacao: 1,
+          status: updateData.status,
+          participanteInclusao: req.user.id,
+          dataInclusao: new Date(),
+        },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      await movimentacaoToken.save();
 
       res.send(atividade);
     } catch (err) {
+      console.log(err)
       res.status(400).send(err.message);
     }
   }
@@ -61,6 +82,16 @@ class atividadesController {
     atividade.dataUltimaAlteracao = new Date();
 
     await atividade.save();
+
+    await MovimentacaoToken.updateMany(
+      { origem: "atividade", item: atividade._id },
+      {
+        status: "cancelado",
+        participanteUltimaAlteracao: req.user.id,
+        dataUltimaAlteracao: new Date(),
+      }
+    );
+
     res.status(204).send();
   }
 }
