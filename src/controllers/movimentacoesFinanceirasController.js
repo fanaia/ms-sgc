@@ -58,7 +58,7 @@ class movimentacoesFinanceirasController {
     } catch (err) {
       res.status(400).send(err.message);
     }
-  }
+  } 
 
   static async delete(req, res) {
     const movimentacao = await MovimentacaoFinanceira.findById(req.params.id);
@@ -66,11 +66,11 @@ class movimentacoesFinanceirasController {
       return res.status(404).send("Movimentacao not found");
     }
 
-    grupoTrabalho.status = "cancelado";
-    grupoTrabalho.participanteUltimaAlteracao = req.user.id;
-    grupoTrabalho.dataUltimaAlteracao = new Date();
+    movimentacao.status = "cancelado";
+    movimentacao.participanteUltimaAlteracao = req.user.id;
+    movimentacao.dataUltimaAlteracao = new Date();
 
-    await grupoTrabalho.save();
+    await movimentacao.save();
     res.status(204).send();
   }
 
