@@ -1,20 +1,33 @@
 const Atividade = require("../models/Atividade");
 
 class atividadesController {
-  static async create(req, res) {
+  static async save(req, res) {
     try {
       const updateData = req.body;
-      if (!updateData.descricao || updateData.descricao == "")
-        return res.status(400).send("Descricao is required");
+      if (updateData.descricao == "") return res.status(400).send("Descricao is required");
 
       updateData.totalTokens = updateData.totalHoras * req.user.tokenHora;
-      updateData.participante = req.user.id;
-      updateData.participanteInclusao = req.user.id;
-      updateData.dataInclusao = new Date();
 
-      const atividade = new Atividade(updateData);
-      await atividade.save();
-      res.status(201).send(atividade);
+      let atividade;
+      if (req.params.id) {
+        updateData.participanteUltimaAlteracao = req.user.id;
+        updateData.dataUltimaAlteracao = new Date();
+
+        atividade = await Atividade.findByIdAndUpdate(req.params.id, updateData, { new: true });
+        if (!atividade) {
+          return res.status(404).send("Atividade not found");
+        }
+      } else {
+        updateData.participanteInclusao = req.user.id;
+        updateData.dataInclusao = new Date();
+
+        atividade = new Atividade(updateData);
+        await atividade.save();
+      }
+
+      
+
+      res.send(atividade);
     } catch (err) {
       res.status(400).send(err.message);
     }
@@ -35,24 +48,6 @@ class atividadesController {
       return res.status(404).send("Atividade not found");
     }
     res.send(atividade);
-  }
-
-  static async update(req, res) {
-    try {
-      const updateData = req.body;
-      if (updateData.descricao == "") return res.status(400).send("Descricao is required");
-
-      updateData.participanteUltimaAlteracao = req.user.id;
-      updateData.dataUltimaAlteracao = new Date();
-
-      const atividade = await Atividade.findByIdAndUpdate(req.params.id, updateData, { new: true });
-      if (!atividade) {
-        return res.status(404).send("Atividade not found");
-      }
-      res.send(atividade);
-    } catch (err) {
-      res.status(400).send(err.message);
-    }
   }
 
   static async delete(req, res) {
