@@ -33,10 +33,10 @@ class atividadesController {
           acao: "conquistar",
         },
         {
-          participante: updateData.participante._id,
-          valor: updateData.totalTokens,
+          participante: atividade.participante._id,
+          valor: atividade.totalTokens,
           tipoMovimentacao: 1,
-          status: updateData.status,
+          status: atividade.status,
           participanteInclusao: req.user.id,
           dataInclusao: new Date(),
         },
