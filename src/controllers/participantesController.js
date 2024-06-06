@@ -1,7 +1,7 @@
 const CryptoJS = require("crypto-js");
-const jwt = require("jsonwebtoken");
 const Participante = require("../models/Participante");
-
+const GrupoTrabalho = require("../models/GrupoTrabalho");
+const Projeto = require("../models/Projeto");
 class participantesController {
   static async create(req, res) {
     try {
@@ -31,7 +31,25 @@ class participantesController {
 
   static async readAll(req, res) {
     const participantes = await Participante.find(req.query).select("-senha").sort("nome");
-    res.send(participantes);
+
+    const participantesWithCounts = await Promise.all(
+      participantes.map(async (participante) => {
+        const gruposTrabalhoCount = await GrupoTrabalho.countDocuments({
+          participanteResponsavel: participante._id,
+        });
+        const projetosCount = await Projeto.countDocuments({
+          participanteResponsavel: participante._id,
+        });
+        const pesoConsenso = gruposTrabalhoCount + projetosCount;
+
+        return {
+          ...participante._doc,
+          pesoConsenso,
+        };
+      })
+    );
+
+    res.send(participantesWithCounts);
   }
 
   static async readOne(req, res) {
