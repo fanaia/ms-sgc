@@ -52,9 +52,12 @@ class participantesController {
       participantes.map(async (participante) => {
         const gruposTrabalhoCount = await GrupoTrabalho.countDocuments({
           participanteResponsavel: participante._id,
+          status: "ativo",
         });
+
         const projetosCount = await Projeto.countDocuments({
           participanteResponsavel: participante._id,
+          status: "ativo",
         });
         const pesoConsenso = gruposTrabalhoCount + projetosCount;
 
