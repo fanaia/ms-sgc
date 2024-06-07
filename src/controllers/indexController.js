@@ -27,7 +27,7 @@ class IndexController {
     );
     participante.jwt = tokenJwt;
     await participante.save();
-    res.send({ tokenJwt });
+    res.send({ tokenJwt, nome: participante.nome, _id: participante._id });
   }
 }
 
