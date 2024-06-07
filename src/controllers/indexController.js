@@ -4,7 +4,7 @@ const Participante = require("../models/Participante");
 
 class IndexController {
   static async test(req, res) {
-    res.send({ status: "funcionando..." });
+    res.send({ status: "funcionando... (a)" });
   }
 
   static async login(req, res) {
