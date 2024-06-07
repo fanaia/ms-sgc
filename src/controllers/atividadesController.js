@@ -13,6 +13,7 @@ class atividadesController {
       if (req.params.id) {
         updateData.participanteUltimaAlteracao = req.user.id;
         updateData.dataUltimaAlteracao = new Date();
+        updateData.status = "pendente";
 
         atividade = await Atividade.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!atividade) {
@@ -21,6 +22,7 @@ class atividadesController {
       } else {
         updateData.participanteInclusao = req.user.id;
         updateData.dataInclusao = new Date();
+        updateData.status = "pendente";
 
         atividade = new Atividade(updateData);
         await atividade.save();
