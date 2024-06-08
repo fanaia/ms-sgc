@@ -1,19 +1,21 @@
 const Atividade = require("../models/Atividade");
+const GrupoTrabalho = require("../models/GrupoTrabalho");
 const MovimentacaoToken = require("../models/MovimentacaoToken");
 
 class atividadesController {
   static async save(req, res) {
     try {
       const updateData = req.body;
-      if (updateData.descricao == "") return res.status(400).send("Descricao is required");
+      if (updateData.descricao == "")
+        return res.status(400).send("Descrição da atividade é obrigatória");
 
       updateData.totalTokens = updateData.totalHoras * req.user.tokenHora;
+      updateData.participanteUltimaAlteracao = req.user.id;
+      updateData.dataUltimaAlteracao = new Date();
+      updateData.status = "pendente";
 
       let atividade;
       if (req.params.id) {
-        updateData.participanteUltimaAlteracao = req.user.id;
-        updateData.dataUltimaAlteracao = new Date();
-
         atividade = await Atividade.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!atividade) {
           return res.status(404).send("Atividade not found");
@@ -93,6 +95,37 @@ class atividadesController {
     );
 
     res.status(204).send();
+  }
+
+  static async approve(req, res) {
+    try {
+      const responsavel = await GrupoTrabalho.findOne({ participanteResponsavel: req.user.id });
+      if (!responsavel) {
+        return res.status(403).send("Somente responsáveis por GT podem fazer aprovação");
+      }
+
+      const atividade = await Atividade.findById(req.params.id);
+      if (!atividade) {
+        return res.status(404).send("Atividade não encontrada");
+      }
+
+      if (
+        req.user.id == atividade.participanteUltimaAlteracao._id &&
+        req.params.approve === "true"
+      ) {
+        return res.status(403).send("Não é possível aprovar a própria alteração");
+      }
+
+      atividade.status = req.params.approve === "true" ? "ativo" : "recusado";
+
+      atividade.participanteUltimaAlteracao = req.user.id;
+      atividade.dataUltimaAlteracao = new Date();
+
+      await atividade.save();
+      res.status(200).send(atividade);
+    } catch (err) {
+      res.status(400).send(err.message);
+    }
   }
 }
 

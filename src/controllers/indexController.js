@@ -4,7 +4,7 @@ const Participante = require("../models/Participante");
 
 class IndexController {
   static async test(req, res) {
-    res.send({ status: "funcionando..." });
+    res.send({ status: "funcionando... (a)" });
   }
 
   static async login(req, res) {
@@ -12,9 +12,9 @@ class IndexController {
     const hashedPassword = CryptoJS.SHA256(senha).toString();
     const participante = await Participante.findOne({ whatsapp, senha: hashedPassword });
 
-    if (!participante) return res.status(401).send({ message: "Dados inválidos" });
+    if (!participante) return res.status(401).send("Dados inválidos");
     if (!participante.status === "ativo")
-      return res.status(401).send({ message: "Status participante: " + participante.status });
+      return res.status(401).send("Status participante: " + participante.status);
 
     const tokenJwt = jwt.sign(
       {
@@ -27,7 +27,7 @@ class IndexController {
     );
     participante.jwt = tokenJwt;
     await participante.save();
-    res.send({ tokenJwt });
+    res.send({ tokenJwt, nome: participante.nome, _id: participante._id });
   }
 }
 
