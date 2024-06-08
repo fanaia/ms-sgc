@@ -9,13 +9,17 @@ const ParticipanteSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   senha: {
     type: String,
     required: true,
   },
   documento: {
     type: String,
-    required: false,
+    required: true,
   },
   chavePix: {
     type: String,
