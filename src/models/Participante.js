@@ -11,7 +11,7 @@ const ParticipanteSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: false,
   },
   senha: {
     type: String,
@@ -19,7 +19,7 @@ const ParticipanteSchema = new mongoose.Schema({
   },
   documento: {
     type: String,
-    required: true,
+    required: false,
   },
   chavePix: {
     type: String,
@@ -38,7 +38,7 @@ const ParticipanteSchema = new mongoose.Schema({
   participanteInclusao: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Participante",
-    required: true,
+    required: false,
   },
   dataInclusao: {
     type: Date,
