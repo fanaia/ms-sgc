@@ -1,10 +1,35 @@
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 const Participante = require("../models/Participante");
+const Config = require("../models/Config");
 
 class IndexController {
   static async test(req, res) {
-    res.send({ status: "funcionando... (a)" });
+    res.send({ status: "funcionando... (0.0.1)" });
+  }
+
+  static async createSeed(req, res) {
+    const { contratoSocial, tokenNome, tokenSigla, liquidacaoMinima, participante } = req.body;
+
+    console.log(req.body);
+
+    const hasActiveParticipant = await Participante.findOne({ status: "ativo" });
+    if (!hasActiveParticipant) {
+      const configData = { contratoSocial, tokenNome, tokenSigla, liquidacaoMinima };
+      await Config.findOneAndUpdate({}, configData, { upsert: true, new: true });
+
+      const hashedPassword = participante.senha
+        ? CryptoJS.SHA256(participante.senha).toString()
+        : null;
+      participante.senha = hashedPassword;
+      participante.status = "ativo";
+      participante.tokenHora = 1;
+      await Participante.create(participante);
+
+      return res.send("uma nova semente foi criada... seja bem vindo!");
+    }
+
+    return res.status(400).json("já existe uma seed criada...");
   }
 
   static async login(req, res) {

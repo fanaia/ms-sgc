@@ -9,6 +9,10 @@ const ParticipanteSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  email: {
+    type: String,
+    required: false,
+  },
   senha: {
     type: String,
     required: true,
@@ -34,7 +38,7 @@ const ParticipanteSchema = new mongoose.Schema({
   participanteInclusao: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Participante",
-    required: true,
+    required: false,
   },
   dataInclusao: {
     type: Date,

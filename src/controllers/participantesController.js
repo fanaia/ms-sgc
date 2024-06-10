@@ -95,11 +95,20 @@ class participantesController {
 
   static async approve(req, res) {
     try {
-      const grupoTrabalho = await GrupoTrabalho.findOne({ participanteResponsavel: req.user.id });
-      if (!grupoTrabalho) {
-        return res.status(403).send("Somente responsáveis por GT podem fazer aprovação");
+      const grupoTrabalhoCount = await GrupoTrabalho.aggregate([
+        {
+          $group: {
+            _id: "$participanteResponsavel",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+      if (grupoTrabalhoCount > 0) {
+        const grupoTrabalho = await GrupoTrabalho.findOne({ participanteResponsavel: req.user.id });
+        if (!grupoTrabalho) {
+          return res.status(403).send("Somente responsáveis por GT podem fazer aprovação");
+        }
       }
-
       const participante = await Participante.findById(req.params.id);
       if (!participante) {
         return res.status(404).send("Participante não encontrado");
@@ -107,7 +116,8 @@ class participantesController {
 
       if (
         req.user.id == participante.participanteUltimaAlteracao._id &&
-        req.params.approve === "true"
+        req.params.approve === "true" &&
+        grupoTrabalhoCount > 1
       ) {
         return res.status(403).send("Não é possível aprovar a própria alteração");
       }
