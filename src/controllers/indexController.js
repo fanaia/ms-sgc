@@ -51,8 +51,8 @@ class IndexController {
   }
 
   static async login(req, res) {
-    const contratoSocial = req.headers["contrato-social"];
-    const Participante = getParticipante(contratoSocial);
+    const identificador = req.headers.identificador;
+    const Participante = getParticipante(identificador);
 
     const { whatsapp, senha } = req.body;
     const hashedPassword = CryptoJS.SHA256(senha).toString();

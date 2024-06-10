@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
-const Participante = require("../models/Participante");
+const getParticipante = require("../models/Participante");
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const contratoSocial = req.headers["contrato-social"];
+  const identificador = req.headers["identificador"];
 
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -12,9 +12,9 @@ const authMiddleware = async (req, res, next) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
     if (err) return res.status(403).json({ error: "Token inválido" });
 
-    // console.log(`Participante: ${JSON.stringify(user)}`);
     const { _id, whatsapp, senha } = user;
-    const participante = await Participante(contratoSocial).findOne({ _id });
+    const Participante = await getParticipante(identificador);
+    const participante = await Participante.findOne({ _id });
 
     if (!participante) return res.status(403).json({ error: "Participante não encontrado" });
     if (participante.whatsapp !== whatsapp || participante.senha !== senha)
@@ -23,7 +23,7 @@ const authMiddleware = async (req, res, next) => {
       return res.status(403).json({ error: "Status Participante: " + participante.status });
 
     req.user = participante;
-    req.contratoSocial = contratoSocial;
+    req.identificador = identificador;
     next();
   });
 };

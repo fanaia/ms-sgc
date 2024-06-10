@@ -5,7 +5,7 @@ const getProjeto = require("../models/Projeto");
 class participantesController {
   static async save(req, res) {
     try {
-      const Participante = getParticipante(req.contratoSocial);
+      const Participante = getParticipante(req.identificador);
       const updateData = req.body;
 
       if (updateData.senha) {
@@ -45,9 +45,9 @@ class participantesController {
   }
 
   static async readAll(req, res) {
-    const Participante = getParticipante(req.contratoSocial);
-    const GrupoTrabalho = getGrupoTrabalho(req.contratoSocial);
-    const Projeto = getProjeto(req.contratoSocial);
+    const Participante = getParticipante(req.identificador);
+    const GrupoTrabalho = getGrupoTrabalho(req.identificador);
+    const Projeto = getProjeto(req.identificador);
 
     const participantes = await Participante.find(req.query).select("-senha").sort("nome");
 
