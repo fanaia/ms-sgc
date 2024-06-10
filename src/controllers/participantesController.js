@@ -6,8 +6,6 @@ class participantesController {
   static async save(req, res) {
     try {
       const updateData = req.body;
-      if (!updateData.nome || updateData.nome == "")
-        return res.status(400).send("Nome is required");
 
       if (updateData.senha) {
         const hashedPassword = updateData.senha
