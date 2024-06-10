@@ -44,6 +44,12 @@ const GrupoTrabalhoSchema = new mongoose.Schema({
   },
 });
 
-const GrupoTrabalho = mongoose.model("GrupoTrabalho", GrupoTrabalhoSchema, "gruposTrabalho");
+const getGrupoTrabalho = (contratoSocial) => {
+  return mongoose.model(
+    `${contratoSocial}_GrupoTrabalho`,
+    GrupoTrabalhoSchema,
+    `${contratoSocial}_gruposTrabalho`
+  );
+};
 
-module.exports = GrupoTrabalho;
+module.exports = getGrupoTrabalho;

@@ -1,4 +1,4 @@
-const GrupoTrabalho = require("../models/GrupoTrabalho");
+const getGrupoTrabalho = require("../models/GrupoTrabalho");
 
 class grupoTrabalhosController {
   static async save(req, res) {
@@ -34,6 +34,7 @@ class grupoTrabalhosController {
   }
 
   static async readAll(req, res) {
+    const GrupoTrabalho = getGrupoTrabalho(req.contratoSocial);
     const gruposTrabalho = await GrupoTrabalho.find(req.query)
       .populate("participanteResponsavel", "nome")
       .sort("nome");

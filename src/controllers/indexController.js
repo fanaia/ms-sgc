@@ -1,21 +1,39 @@
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
-const Participante = require("../models/Participante");
-const Config = require("../models/Config");
+const getParticipante = require("../models/Participante");
+const getConfig = require("../models/Config");
 
 class IndexController {
   static async test(req, res) {
-    res.send({ status: "funcionando... (0.0.1)" });
+    res.send({ status: "funcionando... (multitenancy)" });
   }
 
   static async createSeed(req, res) {
-    const { contratoSocial, tokenNome, tokenSigla, liquidacaoMinima, participante } = req.body;
+    const {
+      identificador,
+      nome,
+      token,
+      tokenSigla,
+      liquidacaoMinima,
+      ativarEstagioParticipante,
+      participante,
+    } = req.body;
+
+    const Config = getConfig(identificador);
+    const Participante = getParticipante(identificador);
 
     console.log(req.body);
 
     const hasActiveParticipant = await Participante.findOne({ status: "ativo" });
     if (!hasActiveParticipant) {
-      const configData = { contratoSocial, tokenNome, tokenSigla, liquidacaoMinima };
+      const configData = {
+        identificador,
+        nome,
+        token,
+        tokenSigla,
+        liquidacaoMinima,
+        ativarEstagioParticipante,
+      };
       await Config.findOneAndUpdate({}, configData, { upsert: true, new: true });
 
       const hashedPassword = participante.senha
@@ -33,6 +51,9 @@ class IndexController {
   }
 
   static async login(req, res) {
+    const contratoSocial = req.headers["contrato-social"];
+    const Participante = getParticipante(contratoSocial);
+
     const { whatsapp, senha } = req.body;
     const hashedPassword = CryptoJS.SHA256(senha).toString();
     const participante = await Participante.findOne({ whatsapp, senha: hashedPassword });

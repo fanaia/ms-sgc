@@ -56,6 +56,12 @@ const ParticipanteSchema = new mongoose.Schema({
   },
 });
 
-const Participante = mongoose.model("Participante", ParticipanteSchema, "participantes");
+const getParticipante = (contratoSocial) => {
+  return mongoose.model(
+    `${contratoSocial}_Participante`,
+    ParticipanteSchema,
+    `${contratoSocial}_participantes`
+  );
+};
 
-module.exports = Participante;
+module.exports = getParticipante;

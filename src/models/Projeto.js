@@ -44,6 +44,8 @@ const ProjetoSchema = new mongoose.Schema({
   },
 });
 
-const Projeto = mongoose.model("Projeto", ProjetoSchema, "projetos");
+const getProjeto = (contratoSocial) => {
+  return mongoose.model(`${contratoSocial}_Projeto`, ProjetoSchema, `${contratoSocial}_projetos`);
+};
 
-module.exports = Projeto;
+module.exports = getProjeto;

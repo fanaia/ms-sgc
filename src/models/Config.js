@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
 
 const ConfigSchema = new mongoose.Schema({
-  contratoSocial: {
+  identificador: {
     type: String,
     required: true,
   },
-  tokenNome: {
+  nome: {
+    type: String,
+    required: true,
+  },
+  token: {
     type: String,
     required: true,
   },
@@ -23,8 +27,18 @@ const ConfigSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  ativarEstagioParticipante: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const Config = mongoose.model("Config", ConfigSchema, "configuracoes");
+const getConfig = (contratoSocial) => {
+  return mongoose.model(
+    `${contratoSocial}_Config`,
+    ConfigSchema,
+    `${contratoSocial}_configuracoes`
+  );
+};
 
-module.exports = Config;
+module.exports = getConfig;

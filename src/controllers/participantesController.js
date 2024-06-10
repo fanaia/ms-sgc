@@ -1,10 +1,11 @@
 const CryptoJS = require("crypto-js");
-const Participante = require("../models/Participante");
-const GrupoTrabalho = require("../models/GrupoTrabalho");
-const Projeto = require("../models/Projeto");
+const getParticipante = require("../models/Participante");
+const getGrupoTrabalho = require("../models/GrupoTrabalho");
+const getProjeto = require("../models/Projeto");
 class participantesController {
   static async save(req, res) {
     try {
+      const Participante = getParticipante(req.contratoSocial);
       const updateData = req.body;
 
       if (updateData.senha) {
@@ -44,6 +45,10 @@ class participantesController {
   }
 
   static async readAll(req, res) {
+    const Participante = getParticipante(req.contratoSocial);
+    const GrupoTrabalho = getGrupoTrabalho(req.contratoSocial);
+    const Projeto = getProjeto(req.contratoSocial);
+
     const participantes = await Participante.find(req.query).select("-senha").sort("nome");
 
     const participantesWithCounts = await Promise.all(
