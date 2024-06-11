@@ -15,15 +15,14 @@ class participantesController {
         updateData.senha = hashedPassword;
       }
 
-      updateData.participanteInclusao = req.user.id;
-      updateData.dataInclusao = new Date();
-      updateData.status = "pendente";
+      const count = await Participante.countDocuments({ status: "ativo" });
+      updateData.status = count === 1 ? "ativo" : "pendente";
+
+      updateData.participanteUltimaAlteracao = req.user.id;
+      updateData.dataUltimaAlteracao = new Date();
 
       let participante;
       if (req.params.id) {
-        updateData.participanteUltimaAlteracao = req.user.id;
-        updateData.dataUltimaAlteracao = new Date();
-
         participante = await Participante.findByIdAndUpdate(req.params.id, updateData, {
           new: true,
         });
@@ -33,6 +32,9 @@ class participantesController {
       } else {
         if (!updateData.senha || updateData.senha == "")
           return res.status(400).send("Senha is required");
+
+        updateData.participanteInclusao = req.user.id;
+        updateData.dataInclusao = new Date();
 
         participante = new Participante(updateData);
       }
@@ -75,6 +77,7 @@ class participantesController {
   }
 
   static async readOne(req, res) {
+    const Participante = getParticipante(req.identificador);
     const participante = await Participante.findById(req.params.id);
     if (!participante) {
       return res.status(404).send("Participante not found");
@@ -83,6 +86,7 @@ class participantesController {
   }
 
   static async delete(req, res) {
+    const Participante = getParticipante(req.identificador);
     const participante = await Participante.findById(req.params.id);
     if (!participante) {
       return res.status(404).send("Participante not found");
@@ -97,16 +101,16 @@ class participantesController {
   }
 
   static async approve(req, res) {
+    const Participante = getParticipante(req.identificador);
+    const GrupoTrabalho = getGrupoTrabalho(req.identificador);
+
     try {
       const grupoTrabalhoCount = await GrupoTrabalho.aggregate([
-        {
-          $group: {
-            _id: "$participanteResponsavel",
-            count: { $sum: 1 },
-          },
-        },
+        { $match: { status: "ativo" } },
+        { $group: { _id: "$participanteResponsavel", count: { $sum: 1 } } },
       ]);
-      if (grupoTrabalhoCount > 0) {
+
+      if (grupoTrabalhoCount.length > 0) {
         const grupoTrabalho = await GrupoTrabalho.findOne({ participanteResponsavel: req.user.id });
         if (!grupoTrabalho) {
           return res.status(403).send("Somente responsáveis por GT podem fazer aprovação");
@@ -120,7 +124,7 @@ class participantesController {
       if (
         req.user.id == participante.participanteUltimaAlteracao._id &&
         req.params.approve === "true" &&
-        grupoTrabalhoCount > 1
+        grupoTrabalhoCount.length > 1
       ) {
         return res.status(403).send("Não é possível aprovar a própria alteração");
       }
@@ -133,6 +137,7 @@ class participantesController {
       await participante.save();
       res.status(200).send(participante);
     } catch (err) {
+      console.log(err);
       res.status(400).send(err.message);
     }
   }
