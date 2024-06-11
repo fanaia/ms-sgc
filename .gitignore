@@ -118,3 +118,5 @@ yarn-error.log
 
 # vercel
 .vercel
+
+.VSCodeCounter
